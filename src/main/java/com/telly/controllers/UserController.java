@@ -28,6 +28,7 @@ public class UserController {
 	@Autowired
 	ReserveService reserveService;
 
+
 	@RequestMapping("/login")
 	public String showLogin() {
 		return "login";
@@ -58,6 +59,24 @@ public class UserController {
 
 		userService.create(user);
 
+		return "home";
+
+	}
+
+
+	@RequestMapping(value = "/reservebook", method = RequestMethod.POST)
+	public String createReserveBook(@Validated(FormValidationGroup.class) Reserve reserve, BindingResult result, Principal principal) {
+		
+		if (result.hasErrors()) {
+			return "reservebus";
+		}
+		
+		String username = principal.getName();
+		reserve.getUser().setUsername(username);
+		
+		reserveService.reserve(reserve);
+	
+		
 		return "home";
 
 	}
